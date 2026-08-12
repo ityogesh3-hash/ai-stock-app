@@ -66,6 +66,27 @@ def get_all_stocks():
     # List of 500 companies (Simplified here, you can load from a CSV)
     return ["RELIANCE.NS", "TCS.NS", "HDFCBANK.NS", "ICICIBANK.NS", "INFY.NS", "SBIN.NS"] 
 
+# 500+ Stocks Live Engine
+st.subheader("🚀 Live Market Screener (Nifty 500)")
+stock_search = st.text_input("Search Symbol (e.g., RELIANCE, TCS):")
+
+@st.cache_data(ttl=300)
+def fetch_live_data(symbol):
+    # .NS add pannina thaan NSE live data varum
+    ticker = yf.Ticker(f"{symbol.upper()}.NS")
+    info = ticker.info
+    return info
+
+if stock_search:
+    try:
+        data = fetch_live_data(stock_search)
+        col_a, col_b, col_c = st.columns(3)
+        col_a.metric("Current Price", f"₹{data.get('currentPrice', 'N/A')}")
+        col_b.metric("Day High", f"₹{data.get('dayHigh', 'N/A')}")
+        col_c.metric("Market Cap", f"{data.get('marketCap', 0)/1e7:.2f} Cr")
+    except:
+        st.error("Invalid Stock Symbol!")
+        
 st.subheader("Live Market Screener (500+ Companies)")
 search = st.text_input("Search 500+ Companies...")
 # Display logic for 500 companies
