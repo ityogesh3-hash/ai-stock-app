@@ -2,15 +2,17 @@ import streamlit as st
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
+import json
 
 # 1. App Webpage Design Settings
 st.set_page_config(page_title="AI Stock App", page_icon="📈", layout="wide")
 st.title("📈 AI Stock Market Dashboard")
 st.write("Real-time Google News and AI Sentiment Analysis")
 
-# 2. Google Sheets Setup (Adhe JSON file use pandrom)
+# 2. Google Sheets Setup (Using Streamlit Secrets)
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
+creds_dict = json.loads(st.secrets["google_credentials"])
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 client = gspread.authorize(creds)
 
 # 3. Read Data from Google Sheet
