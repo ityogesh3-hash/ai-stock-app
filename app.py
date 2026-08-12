@@ -17,7 +17,6 @@ st.markdown("""
     .stApp { background-color: #f4f7f6; }
     [data-testid="stSidebar"] { background-color: #1e1e2d; color: white; }
     [data-testid="stSidebar"] * { color: white !important; }
-    .css-1r6slb0 { background-color: white; border-radius: 10px; padding: 15px; box-shadow: 0px 4px 6px rgba(0,0,0,0.05); }
 </style>
 """, unsafe_allow_html=True)
 
@@ -43,8 +42,9 @@ try:
     sheet = client.open("Stock AI Dashboard").sheet1
     df = pd.DataFrame(sheet.get_all_records())
     
-   st.subheader("🎯 AI Market Signals")
-    # Tabs for Buy/Sell/Hold
+    st.subheader("🎯 AI Market Signals")
+    
+    # Tabs structure
     tab1, tab2, tab3 = st.tabs(["🟢 BUY", "🔴 SELL", "🟡 HOLD"])
     
     with tab1:
@@ -53,5 +53,6 @@ try:
         st.dataframe(df[df['Recommendation'] == 'Sell'], hide_index=True, use_container_width=True)
     with tab3:
         st.dataframe(df[df['Recommendation'] == 'Hold'], hide_index=True, use_container_width=True)
+
 except Exception as e:
     st.error(f"Data loading error: {e}")
