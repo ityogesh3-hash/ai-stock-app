@@ -6,3 +6,4 @@ feedparser
 vaderSentiment
 plotly
 numpy
+yfinance
