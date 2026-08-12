@@ -42,8 +42,8 @@ col4.metric("INDIA VIX", "12.45", "-2.33%")
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# 5. TODAY'S BUY SIGNALS (Line by Line Full Width)
-st.subheader("🟢 Today's Action: 'BUY' Signals")
+# 5. TODAY'S SIGNALS (Line by Line with Tabs)
+st.subheader("🎯 AI Signals: Buy, Sell & Hold")
 
 try:
     # Fetch REAL data from Google Sheets
@@ -56,14 +56,34 @@ try:
     
     if data:
         df_news = pd.DataFrame(data)
-        # Filter strictly for BUY signals
-        buy_stocks = df_news[df_news['Recommendation'] == 'Buy']
         
-        if not buy_stocks.empty:
-            # Display line by line using a full width table
-            st.dataframe(buy_stocks[['Date', 'Stock Symbol', 'News Headline']], hide_index=True, use_container_width=True)
-        else:
-            st.info("No 'BUY' signals generated yet for today.")
+        # Tabs for Easy Navigation
+        tab1, tab2, tab3, tab4 = st.tabs(["🟢 BUY Signals", "🔴 SELL Signals", "🟡 HOLD Signals", "🌐 ALL Signals"])
+        
+        with tab1:
+            buy_stocks = df_news[df_news['Recommendation'] == 'Buy']
+            if not buy_stocks.empty:
+                st.dataframe(buy_stocks, hide_index=True, use_container_width=True)
+            else:
+                st.info("No 'BUY' signals generated yet.")
+                
+        with tab2:
+            sell_stocks = df_news[df_news['Recommendation'] == 'Sell']
+            if not sell_stocks.empty:
+                st.dataframe(sell_stocks, hide_index=True, use_container_width=True)
+            else:
+                st.info("No 'SELL' signals generated yet.")
+                
+        with tab3:
+            hold_stocks = df_news[df_news['Recommendation'] == 'Hold']
+            if not hold_stocks.empty:
+                st.dataframe(hold_stocks, hide_index=True, use_container_width=True)
+            else:
+                st.info("No 'HOLD' signals generated yet.")
+                
+        with tab4:
+            st.dataframe(df_news, hide_index=True, use_container_width=True)
+            
     else:
         st.warning("Data not found. Please run stock_news.py")
 except Exception as e:
