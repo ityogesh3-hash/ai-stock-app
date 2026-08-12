@@ -43,14 +43,15 @@ try:
     sheet = client.open("Stock AI Dashboard").sheet1
     df = pd.DataFrame(sheet.get_all_records())
     
-    st.subheader("🎯 AI Market Signals")
+   st.subheader("🎯 AI Market Signals")
+    # Tabs for Buy/Sell/Hold
     tab1, tab2, tab3 = st.tabs(["🟢 BUY", "🔴 SELL", "🟡 HOLD"])
     
     with tab1:
-        st.dataframe(df[df['Recommendation'] == 'Buy'], use_container_width=True)
+        st.dataframe(df[df['Recommendation'] == 'Buy'], hide_index=True, use_container_width=True)
     with tab2:
-        st.dataframe(df[df['Recommendation'] == 'Sell'], use_container_width=True)
+        st.dataframe(df[df['Recommendation'] == 'Sell'], hide_index=True, use_container_width=True)
     with tab3:
-        st.dataframe(df[df['Recommendation'] == 'Hold'], use_container_width=True)
+        st.dataframe(df[df['Recommendation'] == 'Hold'], hide_index=True, use_container_width=True)
 except Exception as e:
     st.error(f"Data loading error: {e}")
