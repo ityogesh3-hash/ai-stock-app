@@ -4,3 +4,5 @@ oauth2client
 pandas
 feedparser
 vaderSentiment
+plotly
+numpy
