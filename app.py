@@ -70,15 +70,19 @@ def login_page():
         st.markdown('<div class="login-heading">MarketX Terminal</div>', unsafe_allow_html=True)
         st.markdown('<p style="color:#818ba3; text-align:center; margin-bottom:25px; font-size:13px;">Enter credentials to access cinematic analytics</p>', unsafe_allow_html=True)
         
-        username = st.text_input("Username")
-        password = st.text_input("Password", type="password")
-        
-        if st.button("Secure Login", use_container_width=True):
-            if username == "admin" and password == "marketx2026":
-                st.session_state.logged_in = True
-                st.rerun()
-            else:
-                st.error("Invalid Username or Password!")
+        # Using st.form to fix the credential clearing issue
+        with st.form("login_form"):
+            username = st.text_input("Username")
+            password = st.text_input("Password", type="password")
+            submit_button = st.form_submit_button("Secure Login", use_container_width=True)
+            
+            if submit_button:
+                if username == "admin" and password == "marketx2026":
+                    st.session_state.logged_in = True
+                    st.rerun()
+                else:
+                    st.error("Invalid Username or Password!")
+                    
         st.markdown('</div>', unsafe_allow_html=True)
 
 # Check Login Status
