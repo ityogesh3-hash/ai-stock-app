@@ -74,10 +74,14 @@ else:
         st.rerun()
 
     # Load and Render the Stunning HTML Dashboard via Streamlit Component
+   # Load and Render the Stunning HTML Dashboard
     try:
         with open("dashboard.html", "r", encoding="utf-8") as f:
             html_content = f.read()
-        # Render full screen HTML dashboard component (height set to 1050px for smooth scrolling)
-        components.html(html_content, height=1050, scrolling=True)
+        
+        # Height-a 2500px nu mathura, so full content theriyum
+        # Mobile/Laptop responsive-kku idhu best
+        components.html(html_content, height=2500, scrolling=True) 
+        
     except FileNotFoundError:
-        st.error("⚠️ Error: `dashboard.html` file not found in your repository! Please upload it.")
+        st.error("⚠️ Error: `dashboard.html` file not found!")
