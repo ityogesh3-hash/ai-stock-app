@@ -7,3 +7,4 @@ vaderSentiment
 plotly
 numpy
 yfinance
+nsepython
