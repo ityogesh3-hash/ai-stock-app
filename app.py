@@ -1,117 +1,83 @@
 import streamlit as st
-import pandas as pd
-import yfinance as yf
-import plotly.graph_objects as go
-import json
-from oauth2client.service_account import ServiceAccountCredentials
-import gspread
+import streamlit.components.v1 as components
+import datetime
 
-# Page Configuration
-st.set_page_config(page_title="MarketVista Premium AI", page_icon="📈", layout="wide")
+# Page configuration
+st.set_page_config(page_title="MarketX — Stock Market Analytics", page_icon="📈", layout="wide")
 
-# CSS Theme
-st.markdown("""
-<style>
-    .stApp { background-color: #f4f7f6; }
-    [data-testid="stSidebar"] { background: linear-gradient(180deg, #1e1e2d 0%, #0d0d17 100%); color: white; }
-    [data-testid="stSidebar"] * { color: white !important; }
-    div.stDataFrame, div[data-testid="stMetric"], div[data-testid="stPlotlyChart"] {
-        background-color: white; border-radius: 12px; padding: 15px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.05);
-    }
-    .status-card { background: #252538; border-radius: 12px; padding: 15px; margin-top: 50px; border: 1px solid #444; color: white; }
-</style>
-""", unsafe_allow_html=True)
+# Initialize Session State for Login
+if 'logged_in' not in st.session_state:
+    st.session_state.logged_in = False
 
-# Sidebar
-with st.sidebar:
-    st.title("📊 MarketVista")
-    st.write("Pro Analytics")
-    st.markdown("---")
-    try:
-        df_stocks = pd.read_csv("stocks.csv")
-        selected_stock = st.selectbox("🔍 Search 500+ Stocks:", df_stocks['Symbol'].tolist())
-    except:
-        selected_stock = "RELIANCE"
-    
+# Login Function / Page UI
+def login_page():
     st.markdown("""
-    <div class="status-card">
-        <small style="color: #00CC96;">● Market Status</small><br>
-        <b>Market Live / Closed</b><br><br>
-        <h3 style="color: white; margin:0;">05:44:12</h3>
-    </div>
+    <style>
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 40px;
+            background: #141a29;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #f4f7fb;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+        .login-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-align: center;
+            background: linear-gradient(100deg, #60a5fa, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .login-sub {
+            font-size: 13px;
+            color: #818ba3;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+    </style>
     """, unsafe_allow_html=True)
 
-# Main Title & Tickers
-st.title("📈 Pro AI Stock Screener & Dashboard")
-col1, col2, col3, col4 = st.columns(4)
-try:
-    n_price = yf.Ticker("^NSEI").history(period="1d")['Close'].iloc[-1]
-    s_price = yf.Ticker("^BSESN").history(period="1d")['Close'].iloc[-1]
-    b_price = yf.Ticker("^NSEBANK").history(period="1d")['Close'].iloc[-1]
-    col1.metric("NIFTY 50", f"₹ {n_price:,.2f}", "+0.85%")
-    col2.metric("SENSEX", f"₹ {s_price:,.2f}", "+0.74%")
-    col3.metric("BANK NIFTY", f"₹ {b_price:,.2f}", "+1.05%")
-    col4.metric("INDIA VIX", "12.45", "-2.33%")
-except:
-    col1.metric("NIFTY 50", "Live Loading...")
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        st.markdown('<div class="login-container">', unsafe_allow_html=True)
+        st.markdown('<div class="login-title">MarketX Terminal</div>', unsafe_allow_html=True)
+        st.markdown('<div class="login-sub">Enter credentials to access analytics</div>', unsafe_allow_html=True)
+        
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        
+        if st.button("Secure Login", use_container_width=True):
+            # Default credentials for demo
+            if username == "admin" and password == "marketx2026":
+                st.session_state.logged_in = True
+                st.rerun()
+            else:
+                st.error("Invalid Username or Password!")
+        st.markdown('</div>', unsafe_allow_html=True)
 
-st.markdown("<br>", unsafe_allow_html=True)
-
-# Selected Stock Live Screener
-if selected_stock:
-    st.subheader(f"📊 Live Data: {selected_stock}")
-    try:
-        ticker_info = yf.Ticker(f"{selected_stock}.NS").info
-        sc1, sc2, sc3, sc4 = st.columns(4)
-        sc1.metric("Current Price", f"₹ {ticker_info.get('currentPrice', 'N/A')}")
-        sc2.metric("Day High", f"₹ {ticker_info.get('dayHigh', 'N/A')}")
-        sc3.metric("52 Week High", f"₹ {ticker_info.get('fiftyTwoWeekHigh', 'N/A')}")
-        sc4.metric("Market Cap", f"₹ {ticker_info.get('marketCap', 0)/1e7:,.2f} Cr")
-    except:
-        st.info("Fetching details...")
-
-st.markdown("---")
-
-# Charts Section (Fixed Layout & Margins)
-st.subheader("📉 Real-Time Nifty 50 Trend & Market Breadth")
-chart_col, breadth_col = st.columns([2, 1])
-
-with chart_col:
-    try:
-        hist = yf.Ticker("^NSEI").history(period="1d", interval="5m")
-        if not hist.empty:
-            fig = go.Figure(data=[go.Scatter(x=hist.index, y=hist['Close'], fill='tozeroy', line=dict(color='#636EFA', width=2))])
-            fig.update_layout(height=320, margin=dict(l=20,r=20,t=20,b=20), paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
-            st.plotly_chart(fig, use_container_width=True)
-    except:
-        st.write("Chart loading...")
-
-with breadth_col:
-    # FIXED DONUT CHART (Proper Margins so it won't cut)
-    labels = ['Advances', 'Declines']
-    values = [35, 15]
-    fig2 = go.Figure(data=[go.Pie(labels=labels, values=values, hole=0.6, marker_colors=['#00CC96', '#EF553B'])])
-    fig2.update_layout(height=320, margin=dict(l=20, r=20, t=20, b=20), showlegend=True)
-    fig2.add_annotation(text="<b>50</b><br>Stocks", x=0.5, y=0.5, font_size=16, showarrow=False)
-    st.plotly_chart(fig2, use_container_width=True)
-
-st.markdown("---")
-
-# Google Sheets AI Signals Tabs
-st.subheader("🎯 AI Market Signals (Automated)")
-try:
-    creds_dict = json.loads(st.secrets["google_credentials"])
-    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
-    client = gspread.authorize(creds)
-    sheet = client.open("Stock AI Dashboard").sheet1
-    df = pd.DataFrame(sheet.get_all_records())
+# Check Login Status
+if not st.session_state.logged_in:
+    login_page()
+else:
+    # Clean IST Time Display on top bar if needed
+    current_ist_time = datetime.datetime.utcnow() + datetime.timedelta(hours=5, minutes=30)
+    formatted_time = current_ist_time.strftime("%d %b %Y, %I:%M:%S %p IST")
     
-    if not df.empty:
-        tab1, tab2, tab3, tab4 = st.tabs(["🟢 BUY Signals", "🔴 SELL Signals", "🟡 HOLD Signals", "🌐 ALL Signals"])
-        with tab1: st.dataframe(df[df['Recommendation'] == 'Buy'], hide_index=True, use_container_width=True)
-        with tab2: st.dataframe(df[df['Recommendation'] == 'Sell'], hide_index=True, use_container_width=True)
-        with tab3: st.dataframe(df[df['Recommendation'] == 'Hold'], hide_index=True, use_container_width=True)
-        with tab4: st.dataframe(df, hide_index=True, use_container_width=True)
-except:
-    st.warning("Database connection waiting...")
+    st.sidebar.success(f"🟢 Connected | {formatted_time}")
+    if st.sidebar.button("Logout"):
+        st.session_state.logged_in = False
+        st.rerun()
+
+    # Load and Render the Stunning HTML Dashboard via Streamlit Component
+    try:
+        with open("dashboard.html", "r", encoding="utf-8") as f:
+            html_content = f.read()
+        # Render full screen HTML dashboard component (height set to 1050px for smooth scrolling)
+        components.html(html_content, height=1050, scrolling=True)
+    except FileNotFoundError:
+        st.error("⚠️ Error: `dashboard.html` file not found in your repository! Please upload it.")
