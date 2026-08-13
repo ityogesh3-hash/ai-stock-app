@@ -668,47 +668,57 @@ footer{padding:60px 0 40px;border-top:1px solid var(--border-soft);position:rela
 </section>
 
 <!-- ============================= SECTION 04 — MARKET INTELLIGENCE ============================= -->
+<!-- ============================= SECTION 04 — MARKET INTELLIGENCE & SIGNALS ============================= -->
 <section class="section" id="intelligence">
   <div class="container">
-    <p class="eyebrow">Section 04 — Signals</p>
+    <p class="eyebrow">Section 04 — AI Actionable Signals</p>
     <div class="section-head">
-      <h2>Market Intelligence</h2>
-      <p>Pattern recognition, sentiment scoring and model-driven recommendations — built to sharpen your next move.</p>
+      <h2>Smart Trading Signals & Recommendations</h2>
+      <p>Institutional-grade buy, sell, and hold signals with clear targets, stop-loss, and exit triggers.</p>
     </div>
 
-    <div class="intel-grid">
-      <div class="glass intel-card">
-        <div class="intel-visual">
-          <svg class="visual-line" viewBox="0 0 300 120" preserveAspectRatio="none">
-            <polyline points="0,90 30,70 60,80 90,50 120,60 150,30 180,45 210,20 240,35 270,15 300,25" fill="none" stroke="#22d3ee" stroke-width="2.5"/>
-            <polygon points="0,90 30,70 60,80 90,50 120,60 150,30 180,45 210,20 240,35 270,15 300,25 300,120 0,120" fill="url(#insightFill)" opacity="0.4"/>
-            <defs><linearGradient id="insightFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="transparent"/></linearGradient></defs>
-          </svg>
-        </div>
-        <div class="intel-icon" style="background:rgba(34,211,238,0.14);border:1px solid rgba(34,211,238,0.3);">📈</div>
-        <h4>Market Insights</h4>
-        <p>Momentum is broadening beyond large caps, with mid-cap financials and IT leading breadth for the third straight session.</p>
-        <div class="intel-foot"><span class="badge bull">Bullish Bias</span><span class="confidence">Updated 2m ago</span></div>
-      </div>
-
-      <div class="glass intel-card">
-        <div class="intel-visual">
-          <div class="signal-dots" id="signalBars"></div>
-        </div>
-        <div class="intel-icon" style="background:rgba(139,92,246,0.14);border:1px solid rgba(139,92,246,0.3);">⚡</div>
-        <h4>Trading Signals</h4>
-        <p>Volatility compression on NIFTY futures suggests a breakout setup forming near the 24,900 resistance band.</p>
-        <div class="intel-foot"><span class="badge bear">Caution</span><span class="confidence">Confidence 61%</span></div>
-      </div>
-
-      <div class="glass intel-card">
-        <div class="intel-visual"><div class="ai-orb"></div></div>
-        <div class="intel-icon" style="background:rgba(52,211,153,0.14);border:1px solid rgba(52,211,153,0.3);">🤖</div>
-        <h4>AI Recommendation</h4>
-        <p>Model weighting favors accumulation in energy and banking on dips, with a defensive hedge in gold-linked assets.</p>
-        <div class="intel-foot"><span class="badge bull">Accumulate</span><span class="confidence">Confidence 82%</span></div>
-      </div>
+    <!-- Signals Table -->
+    <div class="glass" style="padding: 24px; overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+        <thead>
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); color: var(--text-low); font-family: var(--font-mono); font-size: 12px;">
+            <th style="padding: 12px;">STOCK / ASSET</th>
+            <th style="padding: 12px;">SIGNAL</th>
+            <th style="padding: 12px;">CONFIDENCE</th>
+            <th style="padding: 12px;">ENTRY ZONE</th>
+            <th style="padding: 12px;">TARGET / EXIT</th>
+            <th style="padding: 12px;">ACTION REASON</th>
+          </tr>
+        </thead>
+        <tbody style="color: var(--text-hi);">
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <td style="padding: 16px; font-weight: 600;">RELIANCE</td>
+            <td style="padding: 16px;"><span class="badge bull">🟢 BUY</span></td>
+            <td style="padding: 16px; font-family: var(--font-mono);">84 / 100</td>
+            <td style="padding: 16px; font-family: var(--font-mono);">₹1,475 - ₹1,490</td>
+            <td style="padding: 16px; font-family: var(--font-mono); color: var(--green);">T1: ₹1,535</td>
+            <td style="padding: 16px; color: var(--text-mid); font-size: 13px;">Breakout confirmed with 2.4x volume spike.</td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <td style="padding: 16px; font-weight: 600;">TCS</td>
+            <td style="padding: 16px;"><span class="badge bear">🔴 SELL / EXIT</span></td>
+            <td style="padding: 16px; font-family: var(--font-mono);">78 / 100</td>
+            <td style="padding: 16px; font-family: var(--font-mono);">₹3,850</td>
+            <td style="padding: 16px; font-family: var(--font-mono); color: var(--red);">Exit at Resistance</td>
+            <td style="padding: 16px; color: var(--text-mid); font-size: 13px;">RSI near overbought zone; momentum fading.</td>
+          </tr>
+          <tr>
+            <td style="padding: 16px; font-weight: 600;">CRUDE OIL</td>
+            <td style="padding: 16px;"><span class="badge" style="background:rgba(250,204,21,0.14); color:#facc15; border:1px solid rgba(250,204,21,0.3);">🟡 HOLD</span></td>
+            <td style="padding: 16px; font-family: var(--font-mono);">65 / 100</td>
+            <td style="padding: 16px; font-family: var(--font-mono);">₹6,200</td>
+            <td style="padding: 16px; font-family: var(--font-mono);">Wait for breakout</td>
+            <td style="padding: 16px; color: var(--text-mid); font-size: 13px;">Consolidating inside range; hold till support holds.</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+
   </div>
 </section>
 
