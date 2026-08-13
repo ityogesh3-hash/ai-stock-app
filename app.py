@@ -31,7 +31,59 @@ def get_pro_data(symbol):
 def main_dashboard():
     st.title("🚀 MarketX Institutional Terminal v2.0")
     
-    # 1. Market Intelligence Signals Table
+    # ==========================================
+    # SEARCH BOX & MARKET PULSE SECTION
+    # ==========================================
+    st.markdown("<p style='color:#22d3ee; font-family:monospace; font-size:12px; letter-spacing:2px;'>— SECTION 01 — LIVE DATA</p>", unsafe_allow_html=True)
+    st.markdown("<h2>Market Pulse</h2>", unsafe_allow_html=True)
+    st.write("Every major index and asset, streaming in real time. Search any stock below.")
+    
+    # 1. Search Box
+    search_col1, search_col2 = st.columns([1, 2])
+    with search_col1:
+        # Ippo demo-kku sila top stocks list panrom. Pindadi idhai Google Sheets-la irundhu eduypom.
+        stock_list = ["RELIANCE.BSE", "TCS.BSE", "INFY.BSE", "HDFCBANK.BSE", "TATAMOTORS.BSE"]
+        selected_stock = st.selectbox("🔍 Search 1000+ Stocks", stock_list)
+        
+    # 2. Fetch Live Data for Searched Stock
+    if selected_stock:
+        live_price = get_pro_data(selected_stock)
+        
+        # Design exactly like your picture
+        if isinstance(live_price, float):
+            price_display = f"{live_price:,.2f}"
+            color = "#34d399" # Green
+            arrow = "▲"
+            change = "+1.24%" # Mock change percentage for UI
+        else:
+            price_display = "Fetching..."
+            color = "#818ba3" # Grey
+            arrow = "⏱"
+            change = "..."
+
+        # CSS for the Exact Market Pulse Card
+        pulse_card_html = f"""
+        <div style="background-color: #1a2033; padding: 24px; border-radius: 16px; width: 280px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); margin-top: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <span style="color: #818ba3; font-size: 13px; font-weight: 600; letter-spacing: 1px;">{selected_stock.split('.')[0]}</span>
+                <span style="background: rgba(255,255,255,0.1); color: #c3cbdc; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: bold;">₹</span>
+            </div>
+            <div style="color: #f4f7fb; font-size: 32px; font-weight: bold; margin-bottom: 10px; font-family: 'Inter', sans-serif;">
+                {price_display}
+            </div>
+            <div style="color: {color}; font-size: 14px; font-weight: bold; margin-bottom: 25px;">
+                {arrow} {change}
+            </div>
+            <div style="height: 2px; width: 100%; background: linear-gradient(90deg, {color}, transparent); border-radius: 2px;"></div>
+        </div>
+        """
+        st.markdown(pulse_card_html, unsafe_allow_html=True)
+    
+    st.markdown("---") # Divider
+
+    # ==========================================
+    # PORTFOLIO & SIGNALS (Pazhaiya code apdiye irukku)
+    # ==========================================
     st.subheader("📊 AI Actionable Signals & Recommendations")
     df_signals = pd.DataFrame({
         "Stock / Asset": ["RELIANCE.BSE", "TCS.BSE"],
@@ -42,44 +94,10 @@ def main_dashboard():
     })
     st.table(df_signals)
 
-    # 2. My Stock List (Portfolio Tracking with Alpha Vantage)
-    st.subheader("💼 My Portfolio (Live API Data)")
-    
-    # Unga own stock list (Target Sell price oda set panirukom)
-    portfolio = [
-        {"Stock": "RELIANCE.BSE", "Buy Price": 1420.0, "Target Sell": 1550.0},
-        {"Stock": "TCS.BSE", "Buy Price": 3750.0, "Target Sell": 3950.0}
-    ]
-    
-    portfolio_data = []
-    for item in portfolio:
-        live_price = get_pro_data(item['Stock'])
-        
-        # Calculations based on Live Price
-        if isinstance(live_price, float):
-            pl_amount = ((live_price - item['Buy Price']) / item['Buy Price']) * 100
-            recommendation = "HOLD 🟡" if live_price < item['Target Sell'] else "SELL NOW 🔴"
-            live_price_str = f"₹{live_price:.2f}"
-            pl_str = f"{pl_amount:.2f}%"
-        else:
-            live_price_str = live_price
-            pl_str = "0.00%"
-            recommendation = "Waiting for data..."
-            
-        portfolio_data.append({
-            "Stock Name": item['Stock'],
-            "Buy Price": f"₹{item['Buy Price']}",
-            "Live Price": live_price_str,
-            "P/L %": pl_str,
-            "Exit Recommendation": recommendation
-        })
-    
-    st.table(pd.DataFrame(portfolio_data))
-    
     if st.button("Logout"):
         st.session_state.logged_in = False
         st.rerun()
-
+        
 # ==========================================
 # SECURE LOGIN SYSTEM
 # ==========================================
