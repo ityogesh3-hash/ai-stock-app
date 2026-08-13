@@ -12,7 +12,7 @@ if 'logged_in' not in st.session_state:
 # ==========================================
 # ADVANCED API ENGINE (Alpha Vantage)
 # ==========================================
-API_KEY = 'demo' # <-- Neenga vanguana Alpha vantage API key-a inga 'demo' ku badhila podanum
+API_KEY = 'M3IETCMSKK9NI07U' # <-- Neenga vanguana Alpha vantage API key-a inga 'demo' ku badhila podanum
 
 def get_pro_data(symbol):
     # Professional-grade Live Price Fetcher
