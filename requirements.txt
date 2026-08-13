@@ -8,3 +8,4 @@ plotly
 numpy
 yfinance
 nsepython
+alpha_vantage
